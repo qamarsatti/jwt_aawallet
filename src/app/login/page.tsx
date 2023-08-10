@@ -1,16 +1,26 @@
 "use client"
 // Import necessary dependencies
-import React, { useState } from 'react';
+import React, { useState,CSSProperties  } from 'react';
 import Cookies from 'js-cookie';
 import swal from 'sweetalert';
+import ClipLoader from "react-spinners/ClipLoader";
+
+
+const override: CSSProperties = {
+  display: "block",
+  margin: "0 auto",
+  borderColor: "red",
+};
+const color="#326ba8"
+
 // Define the Login component
 const Login: React.FC = () => {
   // State variables to hold the user's credentials
   const [email, setEmail] = useState('');
+  let [loading, setLoading] = useState(false);
   const [password, setPassword] = useState('');
 
-  // State variable to handle login status
-  const [loginStatus, setLoginStatus] = useState('');
+ 
   
 
   const cookieValue = "ok"
@@ -21,6 +31,7 @@ const Login: React.FC = () => {
 
     // Send the login request to the API
     try {
+      setLoading(true)
       const response = await fetch('/api/auth/auth', {
         method: 'POST',
         headers: {
@@ -35,35 +46,54 @@ const Login: React.FC = () => {
         // Login successful
         swal("succesfully login", "You clicked the button!", "success");
         Cookies.set('jwtToken', data.token, { expires: 1 });
-        setLoginStatus('Login successful');
+       
         // You can also handle authentication token here
       } else {
         // Login failed
         swal("username or password incorrect", "You clicked the button!", "error");
-        setLoginStatus('Login failed');
+        
       }
     } catch (error) {
       console.error('Error logging in:', error);
     }
+    setLoading(false)
   };
 
   return (
-    <div>
-      <h2>Login Page</h2>
+    <>
+    <div className='pl-10 pt-3'>
+      <a href="/">
+<div>Home</div></a>
+    </div>
+    <div className='flex justify-center items-center h-screen'>
+    
+      <div>
+      <ClipLoader
+        color={color}
+        loading={loading}
+        cssOverride={override}
+        size={50}
+        aria-label="Loading Spinner"
+        data-testid="loader"
+      />
+        <div className='flex justify-center text-2xl font-bold'>Login</div>
       <form onSubmit={handleLogin}>
         <div>
           <label>Email:</label>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <input className='border-2 ml-8 mt-10' type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
         </div>
         <div>
           <label>Password:</label>
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <input className='border-2 mt-3' type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         </div>
-        <button type="submit">Login</button>
+        <button type="submit" className='bg-slate-500 text-white w-full mt-4 rounded-2xl'>Login</button>
       </form>
-      <p>{loginStatus}</p>
-      <p>{cookieValue}</p>
     </div>
+    
+    </div>
+
+   
+    </>
   );
 };
 

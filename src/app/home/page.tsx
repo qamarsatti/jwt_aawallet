@@ -6,6 +6,11 @@ const a="ok"
 
 export default function home(){
     return(
-        <div>ok</div>
+        <div className="flex h-screen justify-center items-center text-3xl">
+
+
+This is dashboard
+
+        </div>
     )
 }
