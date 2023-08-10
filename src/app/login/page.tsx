@@ -2,6 +2,7 @@
 // Import necessary dependencies
 import React, { useState } from 'react';
 import Cookies from 'js-cookie';
+import swal from 'sweetalert';
 // Define the Login component
 const Login: React.FC = () => {
   // State variables to hold the user's credentials
@@ -32,12 +33,13 @@ const Login: React.FC = () => {
 
       if (response.ok) {
         // Login successful
-        console.log(data.token)
+        swal("succesfully login", "You clicked the button!", "success");
         Cookies.set('jwtToken', data.token, { expires: 1 });
         setLoginStatus('Login successful');
         // You can also handle authentication token here
       } else {
         // Login failed
+        swal("username or password incorrect", "You clicked the button!", "error");
         setLoginStatus('Login failed');
       }
     } catch (error) {

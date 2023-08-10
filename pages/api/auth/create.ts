@@ -60,6 +60,16 @@ async function createUserHandler(req:NextApiRequest, res:NextApiResponse) {
     return res.status(400).json({ errors });
   }
   try {
+    
+    const checkemail=await prisma.user.findUnique({
+      where: {
+        email: email
+      }
+    })
+    if (checkemail){
+      errors.push("email already exist");
+    return res.status(400).json({ errors });
+    }
     const randomKey = crypto.randomBytes(32).toString("hex");
     const address= await CreateAddress()
     const user = await prisma.user.create({

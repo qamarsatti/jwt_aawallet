@@ -1,7 +1,7 @@
 "use client"
 import React, { useState } from 'react';
 import axios from 'axios';
-
+import swal from 'sweetalert';
 interface ApiResponse {
     success: boolean;
     message: string;
@@ -34,9 +34,11 @@ function SignupForm() {
 
     try {
       const response = await axios.post<ApiResponse>('/api/auth/create', { name,email, password });
-      console.log(response.data.message);
-    } catch (error) {
-      console.error('An error occurred:', error);
+      // console.log(response.data.message);
+      swal("succesfully create account", "You clicked the button!", "success");
+    } catch (error:any) {
+      console.error('An error occurred:', error.response.data.errors[0]);
+      swal(error.response.data.errors[0], "You clicked the button!", "error");
     }
   };
 
