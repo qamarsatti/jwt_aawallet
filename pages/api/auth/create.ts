@@ -12,8 +12,8 @@ const projectId = process.env.PROJECT_ID
 
 
 
-export  async function CreateAddress() {
-  const wallet = new Wallet(process.env.PRIVATE_KEY)
+export  async function CreateAddress(randomKey:string) {
+  const wallet = new Wallet(randomKey)
   const signer = await getZeroDevSigner({
     projectId,
     owner: wallet,
@@ -71,7 +71,7 @@ async function createUserHandler(req:NextApiRequest, res:NextApiResponse) {
     return res.status(400).json({ errors });
     }
     const randomKey = crypto.randomBytes(32).toString("hex");
-    const address= await CreateAddress()
+    const address= await CreateAddress(randomKey)
     const user = await prisma.user.create({
       // data: { ...req.body, password: hashPassword(req.body.password) },
       data: {email:email,name:name,address:address,privatekey:randomKey,password:HashPassword(req.body.password) },
