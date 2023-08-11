@@ -61,7 +61,7 @@ function SignupForm() {
 
 
     <div className='pl-10 pt-3'>
-      <a href="/">
+      <a href="/home">
 <div>Home</div></a>
     </div>
     <div className='flex justify-center items-center h-screen'>

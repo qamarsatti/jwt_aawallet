@@ -55,7 +55,7 @@ async function loginUserHandler(req:NextApiRequest, res:NextApiResponse) {
       };
       const secretKey = process.env.jwtkey;
       const options = {
-        expiresIn: '5h' // Token expires in 5 hour
+        expiresIn: '120s' // Token expires in 5 hour
       };
       const token = jwt.sign(payload, secretKey, options);
       // return res.status(200).json(exclude(user, ["password"]));
@@ -63,8 +63,8 @@ async function loginUserHandler(req:NextApiRequest, res:NextApiResponse) {
     } else {
       return res.status(401).json({ message: "invalid credentials" });
     }
-  } catch (e) {
-    throw new Error();
+  } catch (e:any) {
+    return res.status(401).json({ message:e.message });
   }
 }
 // Function to exclude user password returned from prisma

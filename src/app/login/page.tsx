@@ -4,7 +4,7 @@ import React, { useState,CSSProperties  } from 'react';
 import Cookies from 'js-cookie';
 import swal from 'sweetalert';
 import ClipLoader from "react-spinners/ClipLoader";
-
+import axios from 'axios';
 
 const override: CSSProperties = {
   display: "block",
@@ -13,6 +13,11 @@ const override: CSSProperties = {
 };
 const color="#326ba8"
 
+
+interface ApiResponse {
+  success: boolean;
+  message: string;
+}
 // Define the Login component
 const Login: React.FC = () => {
   // State variables to hold the user's credentials
@@ -20,7 +25,7 @@ const Login: React.FC = () => {
   let [loading, setLoading] = useState(false);
   const [password, setPassword] = useState('');
 
- 
+  
   
 
   const cookieValue = "ok"
@@ -28,41 +33,63 @@ const Login: React.FC = () => {
   // Function to handle form submission
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
+    setLoading(true)
 
-    // Send the login request to the API
+
     try {
-      setLoading(true)
-      const response = await fetch('/api/auth/auth', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        // Login successful
-        swal("succesfully login", "You clicked the button!", "success");
-        Cookies.set('jwtToken', data.token, { expires: 1 });
-       
-        // You can also handle authentication token here
-      } else {
-        // Login failed
-        swal("username or password incorrect", "You clicked the button!", "error");
-        
-      }
-    } catch (error) {
-      console.error('Error logging in:', error);
+      const response = await axios.post<ApiResponse>('/api/auth/auth', { email, password });
+      // console.log(response.data.message);
+      console.log(response.data.token)
+      Cookies.set('jwtToken',response.data.token, { expires: 1 });
+      swal("succesfully ", "You clicked the button!", "success");
+    } catch (error:any) {
+      swal(error.response.data.message, "You clicked the button!", "error");
     }
+
+
+  
+    // try {
+    //   setLoading(true)
+
+    //   const response = await fetch('/api/auth/auth', {
+    //     method: 'POST',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify({ email, password }),
+    //   });
+
+    //   const data = await response.json();
+
+    //   if (response.ok) {
+    //     // Login successful
+    //     swal("succesfully login", "You clicked the button!", "success");
+    //     Cookies.set('jwtToken', data.token, { expires: 1 });
+       
+    //     // You can also handle authentication token here
+    //   }
+      
+    //   else {
+    //     // Login failed
+    //     console.log(response)
+    //     swal("not", "You clicked the button!", "error");
+        
+    //   }
+    // } catch (error) {
+    //   console.log(error)
+    //   console.error('Error logging in:', error);
+    // }
+
+
+
+
     setLoading(false)
   };
 
   return (
     <>
     <div className='pl-10 pt-3'>
-      <a href="/">
+      <a href="/home">
 <div>Home</div></a>
     </div>
     <div className='flex justify-center items-center h-screen'>
